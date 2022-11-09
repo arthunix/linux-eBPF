@@ -6,22 +6,16 @@
 #include <netinet/in.h>
 #include <netinet/if_ether.h>
 
-#define log_cpu_time_taken(clock_var, function, time_taken) {                                       \
-    clock_var = clock();                                                                            \
-    function;                                                                                       \
-    clock_var = clock() - clock_var;                                                                \
-    time_taken = ((double)clock_var)/CLOCKS_PER_SEC;                                                \
-    fprintf(stderr, "CPU time taken: %.5lf in %s at line %i\n", time_taken, #function, __LINE__);   \
-}
+double how_much_time_taken; struct timeval time_val_beg, time_val_end; long how_much_time_sec, how_much_time_usec;
 
-#define log_wall_time_taken(wall_var_sec, wall_var_usec, wall_time_var_beg, wall_time_var_end, function, time_taken) {  \
-    gettimeofday(&wall_time_var_beg, 0);                                                                                \
-    function;                                                                                                           \
-    gettimeofday(&wall_time_var_end, 0);                                                                                \
-    wall_var_sec = wall_time_var_end.tv_sec - wall_time_var_beg.tv_sec;                                                 \
-    wall_var_usec = wall_time_var_end.tv_usec - wall_time_var_beg.tv_usec;                                              \
-    time_taken = wall_var_sec + wall_var_usec*1e-10;                                                                    \
-    fprintf(stderr, "Wall time taken: %.5lf sec in %s at line %i\n", time_taken, #function, __LINE__);                  \
+#define log_wall_time_taken(how_much_time_sec, how_much_time_usec, wall_time_var_beg, wall_time_var_end, function, time_taken) {    \
+    gettimeofday(&wall_time_var_beg, 0);                                                                                            \
+    function;                                                                                                                       \
+    gettimeofday(&wall_time_var_end, 0);                                                                                            \
+    how_much_time_sec = wall_time_var_end.tv_sec - wall_time_var_beg.tv_sec;                                                        \
+    how_much_time_usec = wall_time_var_end.tv_usec - wall_time_var_beg.tv_usec;                                                     \
+    time_taken = wall_var_sec + wall_var_usec*1e-10;                                                                                \
+    fprintf(stderr, "Wall time taken: %.5lf sec in %s at line %i\n", time_taken, #function, __LINE__);                              \
 }
 
 void sleep_seconds(unsigned int tm) {
@@ -55,6 +49,7 @@ int main(int argc, char **argv) {
         ip = 0;
         subnet_mask = 0;
     }
+    
     handle = pcap_open_live(dev, BUFSIZ, 1, 1000, error_buffer);
     if (handle == NULL) {
         printf("Could not open %s - %s\n", dev, error_buffer);
@@ -65,12 +60,12 @@ int main(int argc, char **argv) {
         printf("Bad filter - %s\n", pcap_geterr(handle));
         return 2;
     }
+
     if (pcap_setfilter(handle, &filter) == -1) {
         printf("Error setting filter - %s\n", pcap_geterr(handle));
         return 2;
     }
 
-    log_cpu_time_taken(how_much_clock_taken, pcap_loop(handle, 10, my_packet_handler, NULL), how_much_time_taken);
     log_cpu_time_taken(how_much_clock_taken, pcap_loop(handle, 10, my_packet_handler, NULL), how_much_time_taken);
 
     return 0;
