@@ -32,10 +32,6 @@ struct timeval time_val_begin, time_val_end; long wall_seconds, wall_useconds;
     fprintf(stderr, "Wall time taken: %.17lf sec in %s at line %i\n", time_taken, #function, __LINE__);                 \
 }
 
-void sleep_seconds(unsigned int tm) {
-    sleep(tm);
-}
-
 void print_packet_info(const u_char *packet, struct pcap_pkthdr packet_header) {
     struct iphdr *iphdr = NULL;
     struct tcphdr *tcphdr = NULL;
@@ -111,6 +107,7 @@ int main(int argc, char **argv) {
         ip = 0;
         subnet_mask = 0;
     }
+    
     handle = pcap_open_live(dev, BUFSIZ, 1, 1000, error_buffer);
     if (handle == NULL) {
         printf("Could not open %s - %s\n", dev, error_buffer);
@@ -121,14 +118,15 @@ int main(int argc, char **argv) {
         printf("Bad filter - %s\n", pcap_geterr(handle));
         return 2;
     }
+
     if (pcap_setfilter(handle, &filter) == -1) {
         printf("Error setting filter - %s\n", pcap_geterr(handle));
         return 2;
     }
     
-    while(1){
+    while(1) {
         log_wall_time_taken(wall_seconds, wall_useconds, time_val_begin, time_val_end, pcap_loop(handle, 10, my_packet_handler, NULL), how_much_time_taken);
     }
-    
+
     return 0;
 }
