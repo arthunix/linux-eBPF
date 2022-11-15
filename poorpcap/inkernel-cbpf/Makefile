@@ -8,7 +8,7 @@ SOURCES = $(shell echo *.c)
 HEADERS = $(shell echo *.h)
 OBJECTS=$(SOURCES:.c=.o)
 
-TARGET=filter_user_space_no_bpf
+TARGET=filter_user_space_classic_bpf
 
 all: $(TARGET)
 
