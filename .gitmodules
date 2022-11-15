@@ -7,3 +7,6 @@
 [submodule "xdp-tools"]
 	path = xdp-tools
 	url = git@github.com:xdp-project/xdp-tools.git
+[submodule "poorpcap/userspace-nobpf/libpcap"]
+	path = poorpcap/userspace-nobpf/libpcap
+	url = git@github.com:arthunix/libpcap.git
