@@ -7,3 +7,6 @@
 [submodule "poorpcap/userspace-nobpf/libpcap"]
 	path = poorpcap/userspace-nobpf/libpcap
 	url = git@github.com:arthunix/libpcap.git
+[submodule "libbpf-bootstrap"]
+	path = libbpf-bootstrap
+	url = git@github.com:libbpf/libbpf-bootstrap.git
