@@ -11,6 +11,8 @@
 #include <linux/icmpv6.h>
 #include <linux/time.h>
 
+#include "../filtering_rules.h"
+
 #define MAX_PCKT_LENGTH 65535
 #define MAX_FILTERS 100
 #define MAX_TRACK_IPS 100000
@@ -18,73 +20,6 @@
 
 #define __u128 __uint128_t
 #define _DEBUG
-
-static unsigned int my_nf_hookfn(void *priv, struct sk_buff *skb, const struct nf_hook_state *state)
-{
-      printk("PARSING THE PACKET INSIDE THE KERNEL:\n");
-
-      struct iphdr *iph = ip_hdr(skb);
-      struct tcphdr *tcph = tcp_hdr(skb);
-
-      uint16_t sport = ntohs(tcph->source);
-      uint16_t dport = ntohs(tcph->dest);
-
-      printk("The source IP address is %pI4 | The destination IP address is %pI4\n", &iph->saddr, &iph->daddr);
-      printk("The source port is %u | The destination port is %u\n", sport, dport);
-
-      return NF_ACCEPT;
-}
-
-struct tcpopts
-{
-    unsigned int enabled : 1;
-
-    unsigned int do_sport : 1; __u16 sport;
-    unsigned int do_dport : 1; __u16 dport;
-    unsigned int do_urg : 1; unsigned int urg : 1;
-    unsigned int do_ack : 1; unsigned int ack : 1;
-    unsigned int do_rst : 1; unsigned int rst : 1;
-    unsigned int do_psh : 1; unsigned int psh : 1;
-    unsigned int do_syn : 1; unsigned int syn : 1;
-    unsigned int do_fin : 1; unsigned int fin : 1;
-    unsigned int do_ece : 1; unsigned int ece : 1;
-    unsigned int do_cwr : 1; unsigned int cwr : 1;
-};
-
-struct udpopts
-{
-    unsigned int enabled  : 1;
-    unsigned int do_sport : 1; __u16 sport;
-    unsigned int do_dport : 1; __u16 dport;
-};
-
-struct icmpopts
-{
-    unsigned int enabled : 1;
-    unsigned int do_code : 1; __u8 code;
-    unsigned int do_type : 1; __u8 type;
-};
-
-struct filter
-{
-    unsigned int enabled : 1;
-    __u8 id; __u8 action;
-    __u32 srcip; __u32 dstip;
-    __u32 srcip6[4]; __u32 dstip6[4];
-
-    unsigned int do_min_ttl : 1; __u8  min_ttl;
-    unsigned int do_max_ttl : 1; __u8  max_ttl;
-    unsigned int do_min_len : 1; __u16 min_len;
-    unsigned int do_max_len : 1; __u16 max_len;
-    unsigned int do_tos : 1; __u8  tos;
-    unsigned int do_pps : 1; __u64 pps;
-    unsigned int do_bps : 1; __u64 bps;
-
-    __u64 blocktime;
-    struct tcpopts tcpopts;
-    struct udpopts udpopts;
-    struct icmpopts icmpopts;
-};
 
 static unsigned int firewall_fun(void *priv, struct sk_buff *skb, const struct nf_hook_state *state)
 {

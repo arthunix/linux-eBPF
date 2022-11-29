@@ -1,11 +1,3 @@
-#include <arpa/inet.h>
-#include <linux/if_packet.h>
-#include <linux/if_ether.h>
-#include <linux/in.h>
-#include <net/if.h>
-#include <unistd.h>
-#include <time.h>
-
 #include "../libbpf-bootstrap/examples/c/sockfilter.h"
 
 /*
@@ -75,7 +67,6 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
-		.tcpopts.dport = 53 /* DNS */
 		.tcpopts.dport = 53 /* DNS */
 	},
     {
