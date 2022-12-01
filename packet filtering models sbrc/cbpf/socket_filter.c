@@ -56,7 +56,6 @@ void print_packet_info(const unsigned char *packet, struct pcap_pkthdr packet_he
     lengthiphdr = lengthiphdr * 4;
 
     iphdr = (struct iphdr*)ip_header;
-    
 
     struct in_addr src_address = { iphdr->saddr };
     struct in_addr dst_address = { iphdr->daddr };
@@ -68,12 +67,12 @@ void print_packet_info(const unsigned char *packet, struct pcap_pkthdr packet_he
     u_int16_t src_port;
     u_int16_t dst_port;
 
-    if(ntohs(iphdr->protocol) != IPPROTO_TCP) {
+    if(iphdr->protocol == IPPROTO_TCP) {
         printf("PROTOCOL: TCP ");
         src_port = tcphdr->source;
         dst_port = tcphdr->dest;
     }
-    else if (ntohs(iphdr->protocol) != IPPROTO_UDP) {
+    else if (iphdr->protocol == IPPROTO_UDP) {
         printf("PROTOCOL: UDP ");
         src_port = udphdr->source;
         dst_port = udphdr->dest;
@@ -104,7 +103,7 @@ int main(int argc, char **argv) {
     char error_buffer[PCAP_ERRBUF_SIZE];
     pcap_t *handle; struct bpf_program filter; bpf_u_int32 subnet_mask, ip;
 
-    char filter_exp[] = "tcp and port 443";
+    char filter_exp[] = "not port 443";
 
     if (pcap_lookupnet(dev, &ip, &subnet_mask, error_buffer) == -1) {
         fprintf(stderr,"Could not get information for device: %s\n", dev);
@@ -119,17 +118,33 @@ int main(int argc, char **argv) {
     }
 
     if (pcap_compile(handle, &filter, filter_exp, 0, ip) == -1) {
-        fprintf(stderr,"Bad filter - %s\n", pcap_geterr(handle));
-        return 2;
-    }
+            fprintf(stderr,"Bad filter - %s\n", pcap_geterr(handle));
+            return 2;
+        }
 
     if (pcap_setfilter(handle, &filter) == -1) {
         fprintf(stderr,"Error setting filter - %s\n", pcap_geterr(handle));
         return 2;
     }
 
-    pcap_loop(handle, 10, my_packet_handler, NULL);
-    
+    /* IT IS NOT AT THAT WAY CBPF FILTERS WORK
+
+    for(int i = 0; i < sizeof(filtering_rules_array)/sizeof(filtering_rules_array[0]); i++) {
+        char filter_exp[] = "tcp and port 443";
+
+        if (pcap_compile(handle, &filter, filter_exp, 0, ip) == -1) {
+            fprintf(stderr,"Bad filter - %s\n", pcap_geterr(handle));
+            return 2;
+        }
+
+        if (pcap_setfilter(handle, &filter) == -1) {
+            fprintf(stderr,"Error setting filter - %s\n", pcap_geterr(handle));
+            return 2;
+        }
+    }*/
+
+    pcap_loop(handle, 50, my_packet_handler, NULL);
+
     //while(1) { log_wall_time_taken(wall_seconds, wall_useconds, time_val_begin, time_val_end, pcap_loop(handle, 10, my_packet_handler, NULL), how_much_time_taken); }
 
     return 0;

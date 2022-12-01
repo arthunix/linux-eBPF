@@ -10,3 +10,6 @@
 [submodule "libbpf-bootstrap"]
 	path = libbpf-bootstrap
 	url = git@github.com:arthunix/libbpf-bootstrap.git
+[submodule "packet filtering models sbrc/cbpf-userspace/libpcap"]
+	path = packet filtering models sbrc/cbpf-userspace/libpcap
+	url = git@github.com:arthunix/libpcap.git
