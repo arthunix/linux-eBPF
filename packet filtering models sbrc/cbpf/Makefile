@@ -2,7 +2,7 @@
 
 LDFLAGS	= -lpcap
 FLAGS = -std=gnu11 -Iinclude
-CFLAGS = -O2 -pedantic -Wall -Wextra
+CFLAGS = -O2 -pedantic -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
 
 SOURCES = $(shell echo *.c)
 HEADERS = $(shell echo *.h)
