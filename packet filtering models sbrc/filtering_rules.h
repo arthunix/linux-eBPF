@@ -8,6 +8,9 @@
 #define MAX_TRACK_IPS 100000
 #define MAX_CPUS 256
 
+#define EBPF_DROP 0
+#define EBPF_PASS 1
+
 #define __u128 __uint128_t
 
 struct so_event {
