@@ -1,9 +1,6 @@
 #ifndef __FILTERINGRULES_H
 #define __FILTERINGRULES_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #define MAX_FILTERS 100
 #define MAX_TRACK_IPS 100000
 #define MAX_CPUS 256
@@ -29,32 +26,31 @@ struct so_event {
 
 struct tcpopts
 {
-    unsigned int enabled : 1;
-
-    unsigned int do_sport : 1; __u16 sport;
-    unsigned int do_dport : 1; __u16 dport;
-    unsigned int do_urg : 1; unsigned int urg : 1;
-    unsigned int do_ack : 1; unsigned int ack : 1;
-    unsigned int do_rst : 1; unsigned int rst : 1;
-    unsigned int do_psh : 1; unsigned int psh : 1;
-    unsigned int do_syn : 1; unsigned int syn : 1;
-    unsigned int do_fin : 1; unsigned int fin : 1;
-    unsigned int do_ece : 1; unsigned int ece : 1;
-    unsigned int do_cwr : 1; unsigned int cwr : 1;
+    unsigned int enabled;
+    unsigned int do_sport; __u16 sport;
+    unsigned int do_dport; __u16 dport;
+    unsigned int do_urg; unsigned int urg;
+    unsigned int do_ack; unsigned int ack;
+    unsigned int do_rst; unsigned int rst;
+    unsigned int do_psh; unsigned int psh;
+    unsigned int do_syn; unsigned int syn;
+    unsigned int do_fin; unsigned int fin;
+    unsigned int do_ece; unsigned int ece;
+    unsigned int do_cwr; unsigned int cwr;
 };
 
 struct udpopts
 {
-    unsigned int enabled  : 1;
-    unsigned int do_sport : 1; __u16 sport;
-    unsigned int do_dport : 1; __u16 dport;
+    unsigned int enabled ;
+    unsigned int do_sport; __u16 sport;
+    unsigned int do_dport; __u16 dport;
 };
 
 struct icmpopts
 {
-    unsigned int enabled : 1;
-    unsigned int do_code : 1; __u8 code;
-    unsigned int do_type : 1; __u8 type;
+    unsigned int enabled;
+    unsigned int do_code; __u8 code;
+    unsigned int do_type; __u8 type;
 };
 
 struct filter
@@ -64,13 +60,13 @@ struct filter
     __u32 srcip; __u32 dstip;
     __u32 srcip6[4]; __u32 dstip6[4];
 
-    unsigned int do_min_ttl : 1; __u8  min_ttl;
-    unsigned int do_max_ttl : 1; __u8  max_ttl;
-    unsigned int do_min_len : 1; __u16 min_len;
-    unsigned int do_max_len : 1; __u16 max_len;
-    unsigned int do_tos : 1; __u8  tos;
-    unsigned int do_pps : 1; __u64 pps;
-    unsigned int do_bps : 1; __u64 bps;
+    unsigned int do_min_ttl; __u8  min_ttl;
+    unsigned int do_max_ttl; __u8  max_ttl;
+    unsigned int do_min_len; __u16 min_len;
+    unsigned int do_max_len; __u16 max_len;
+    unsigned int do_tos; __u8  tos;
+    unsigned int do_pps; __u64 pps;
+    unsigned int do_bps; __u64 bps;
 
     __u64 blocktime;
 
@@ -98,6 +94,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 21 /* FTP */
 	},
     {
@@ -105,6 +102,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 22 /* SSH */
 	},
     {
@@ -112,6 +110,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 23 /* TELNET */
 	},
     {
@@ -119,6 +118,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 25 /* SMTP */
 	},
     {
@@ -126,6 +126,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 43 /* WHOIS */
 	},
     {
@@ -133,6 +134,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 53 /* DNS */
 	},
     {
@@ -140,6 +142,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.udpopts.enabled = 1,
+		.udpopts.do_dport = 1,
 		.udpopts.dport = 67 /* DHCP */
 	},
 	{
@@ -147,6 +150,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.udpopts.enabled = 1,
+		.udpopts.do_dport = 1,
 		.udpopts.dport = 68 /* DHCP */
 	},
     {
@@ -154,6 +158,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 80 /* HTTP */
 	},
     {
@@ -161,6 +166,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.udpopts.enabled = 1,
+		.udpopts.do_dport = 1,
 		.udpopts.dport = 80 /* HTTP */
 	},
     {
@@ -168,6 +174,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 110 /* POP3 */
 	},
     {
@@ -175,6 +182,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 115 /* FTP */
 	},
     {
@@ -182,6 +190,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 143 /* IMAP */
 	},
     {
@@ -189,6 +198,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 443 /* HTTPS */
 	},
     {
@@ -196,6 +206,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 443 /* HTTPS */
 	},
     {
@@ -203,6 +214,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 587 /* SMTP SSL */
 	},
     {
@@ -210,6 +222,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_dport = 1,
 		.tcpopts.dport = 993 /* IMAP SSL */
 	},
 	{
@@ -217,6 +230,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 21 /* FTP */
 	},
     {
@@ -224,6 +238,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 22 /* SSH */
 	},
     {
@@ -231,6 +246,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 23 /* TELNET */
 	},
     {
@@ -238,6 +254,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 25 /* SMTP */
 	},
     {
@@ -245,6 +262,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 43 /* WHOIS */
 	},
     {
@@ -252,6 +270,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 53 /* DNS */
 	},
     {
@@ -259,6 +278,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.udpopts.enabled = 1,
+		.udpopts.do_sport = 1,
 		.udpopts.sport = 67 /* DHCP */
 	},
 	{
@@ -266,6 +286,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.udpopts.enabled = 1,
+		.udpopts.do_sport = 1,
 		.udpopts.sport = 68 /* DHCP */
 	},
     {
@@ -273,6 +294,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 80 /* HTTP */
 	},
     {
@@ -280,6 +302,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.udpopts.enabled = 1,
+		.udpopts.do_sport = 1,
 		.udpopts.sport = 80 /* HTTP */
 	},
     {
@@ -287,6 +310,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 110 /* POP3 */
 	},
     {
@@ -294,6 +318,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 115 /* FTP */
 	},
     {
@@ -301,6 +326,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 143 /* IMAP */
 	},
     {
@@ -308,6 +334,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 443 /* HTTPS */
 	},
     {
@@ -315,6 +342,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 443 /* HTTPS */
 	},
     {
@@ -322,6 +350,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 587 /* SMTP SSL */
 	},
     {
@@ -329,6 +358,7 @@ static struct filter filtering_rules_array[] = {
 		.enabled = 0,
 		.action = 0, /* DROP */
 		.tcpopts.enabled = 1,
+		.tcpopts.do_sport = 1,
 		.tcpopts.sport = 993 /* IMAP SSL */
 	},
     /* ANOTHER FILTERING RULES */
