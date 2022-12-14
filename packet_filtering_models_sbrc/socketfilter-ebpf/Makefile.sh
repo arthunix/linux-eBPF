@@ -10,4 +10,4 @@ fi
 cd ../../libbpf-bootstrap/examples/c
 make
 cd ../../../packet_filtering_models_sbrc/ebpf-socketfilter/
-ln -s ../../libbpf-bootstrap/examples/c/sockfilter
+ln -s ../../libbpf-bootstrap/examples/c/sockfilter socket_filter
