@@ -1,1 +1,0 @@
-../../../libbpf-bootstrap/examples/c/sockfilter.h

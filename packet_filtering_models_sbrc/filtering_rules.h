@@ -1,8 +1,8 @@
-#ifndef __SOCKFILTER_H
-#define __SOCKFILTER_H
+#ifndef __FILTERINGRULES_H
+#define __FILTERINGRULES_H
 
-#include <linux/types.h>
-#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define MAX_FILTERS 100
 #define MAX_TRACK_IPS 100000
@@ -10,6 +10,8 @@
 
 #define EBPF_DROP 0
 #define EBPF_PASS 1
+
+#define DEBUG
 
 #define __u128 __uint128_t
 
@@ -89,30 +91,6 @@ struct ip_stats
     __u64 bps;
     __u64 tracking;
 };
-
-static __be32 in_aton(const char *str)
-{
-	unsigned int l;
-	unsigned int val;
-	int i;
-
-	l = 0;
-	for (i = 0; i < 4; i++)	{
-		l <<= 8;
-		if (*str != '\0') {
-			val = 0;
-			while (*str != '\0' && *str != '.' && *str != '\n') {
-				val *= 10;
-				val += *str - '0';
-				str++;
-			}
-			l |= val;
-			if (*str != '\0')
-				str++;
-		}
-	}
-	return htonl(l);
-}
 
 static struct filter filtering_rules_array[] = {
 	{
@@ -384,4 +362,4 @@ static struct filter filtering_rules_array[] = {
 	}
 };
 
-#endif // __SOCKFILTER_H
+#endif // __FILTERINGRULES_H
